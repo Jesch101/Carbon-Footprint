@@ -1,28 +1,33 @@
 from django import forms
-from datetime import datetime
+from cf_app.models import Car, CarMake, CarModel
 
-# TODO: Populate these dictionaries with api calls (?) for US makes/models/year
-# Ex: 
-#   Make: BMW
-#   Mode: 1 Series
-#   Year: 2013
-makes = (
-    ("BMW", "BMW"),
-    ("Toyota", "Toyota"),
-    ("Nissan", "Nissan"),
-    ("Ford", "Ford"),
-    ("Mustang", "Mustang"),
-)
+class CarDetailsForm(forms.ModelForm):
+    class Meta:
+        model = Car
+        fields = ('year', 'make', 'model')
 
-models = (
-    ("1", "One"),
-    ("2", "Two"),
-    ("3", "Three"),
-    ("4", "Four"),
-    ("5", "Five"),
-)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['make'].queryset = CarMake.objects.none()
+        
+        if 'year' in self.data:
+            try:
+                year_id = int(self.data.get('year'))
+                print(year_id)
+                self.fields['make'].queryset = CarMake.objects.filter(year_id=year_id).order_by('name')
+            except (ValueError, TypeError):
+                pass  
+        elif self.instance.pk:
+            self.fields['make'].queryset = self.instance.year.make_set.order_by('year')
 
-class CarDetailsForm(forms.Form):
-    car_make = forms.ChoiceField(choices=makes)
-    car_model = forms.ChoiceField(choices=models)
-    car_year = forms.DecimalField(max_value=datetime.now().year, min_value=2000)
+        self.fields['model'].queryset = CarMake.objects.none()
+
+        if 'make' in self.data:
+            try:
+                make_id = int(self.data.get('make'))
+                self.fields['model'].queryset = CarModel.objects.filter(make_id=make_id).order_by('name')
+            except (ValueError, TypeError):
+                pass  
+        elif self.instance.pk:
+            
+            self.fields['model'].queryset = self.instance.make.vanue_set.order_by('name')

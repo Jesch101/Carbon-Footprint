@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Car Form</h2>
+
+<form method="post" id="carForm" data-make-url="{% url 'ajax_load_makes' %}" novalidate>
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+
+    <button type="submit" value="submission">Submit</button>
+    <a href="{% url 'car_changelist' %}">Cancel</a>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+    $("#id_year").change(function () {
+        var url = $("#carForm").attr("data-makes-url");
+        var yearId = $(this).val();
+
+        $.ajax({
+            url: '{% url 'ajax_load_makes' %}',
+            data: {
+                'year': yearId
+            },
+            success: function (data) {
+                $("#id_make").html(data);
+            }
+        });
+
+    });
+
+    $("#id_make").change(function () {
+        var url = $("#carForm").attr("data-makes-url");
+        var makeId = $(this).val();
+
+        $.ajax({
+            url: '{% url 'ajax_load_models' %}',
+            data: {
+                'make': makeId
+            },
+            success: function (data) {
+                $("#id_model").html(data);
+            }
+        });
+
+    });
+</script>
+
+{% endblock %}

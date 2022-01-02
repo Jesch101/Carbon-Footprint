@@ -1,5 +1,4 @@
 <html lang="en">
-{% load static %}
 <link rel="stylesheet" type="text/css" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 
@@ -7,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carbon Footprint Project</title>
+    <title>Carbon Footprint Calculator</title>
 
 </head>
 <style>
@@ -129,14 +128,10 @@
 
         </header>
 
-        <!-- Container for car selection information -->
-        <div class="w3-container">
-            <form method="GET">
-                {{form}}
-                <input type="submit" value="Submit">
-            </form>
+        <div>
+            {% block content %}
+            {% endblock %}
         </div>
-
     </div>
     <!-- Footer -->
     <style>
