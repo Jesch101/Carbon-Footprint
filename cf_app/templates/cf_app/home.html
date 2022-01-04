@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}HOME VIEW{% endblock %}
+
+{% block content %}
+
+
+<p><a href="{% url 'car_add' %}">Calculate by selecting car</a></p>
+<p><a href="{% url 'calculator' %}">Calculate basic carbon footprint</a></p>
+{% endblock %}

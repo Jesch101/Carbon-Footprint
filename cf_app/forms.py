@@ -1,22 +1,22 @@
 from django import forms
-from cf_app.models import Car, CarMake, CarModel
+from cf_app.models import Car, CarMake, CarModel, CarYear
 
 class CarDetailsForm(forms.ModelForm):
     class Meta:
         model = Car
-        fields = ('year', 'make', 'model')
+        fields = ['year', 'make', 'model']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['year'].queryset = CarYear.objects.order_by('year')
         self.fields['make'].queryset = CarMake.objects.none()
         
         if 'year' in self.data:
             try:
                 year_id = int(self.data.get('year'))
-                print(year_id)
                 self.fields['make'].queryset = CarMake.objects.filter(year_id=year_id).order_by('name')
             except (ValueError, TypeError):
-                pass  
+                pass
         elif self.instance.pk:
             self.fields['make'].queryset = self.instance.year.make_set.order_by('year')
 
@@ -30,4 +30,5 @@ class CarDetailsForm(forms.ModelForm):
                 pass  
         elif self.instance.pk:
             
-            self.fields['model'].queryset = self.instance.make.vanue_set.order_by('name')
+            self.fields['model'].queryset = self.instance.make.model_set.order_by('name')
+

@@ -11,8 +11,16 @@
     </table>
 
     <button type="submit" value="submission">Submit</button>
-    <a href="{% url 'car_changelist' %}">Cancel</a>
+
+    <a href="{% url 'home_view' %}">Cancel</a>
 </form>
+
+
+{% if fuel_efficiency %}
+<p>Your {{ year }} {{ make }} {{ model }} has a fuel efficiency of {{ fuel_efficiency }} miles per gallon</p>
+<p>*Pretend there is another form here to input miles traveled*</p>
+{% endif %}
+
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
