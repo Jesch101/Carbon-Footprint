@@ -9,7 +9,7 @@ class Cars(models.Model):
     manufacturer = models.CharField(max_length=50)
     model = models.CharField(max_length=50)
 
-    fuel_efficiency = models.IntegerField(default=0, blank=True)
+    fuel_efficiency = models.IntegerField(default=0, blank=False)
 
     def __str__(self):
         return f"{self.year_of_manufacture} {self.manufacturer} {self.model}"
