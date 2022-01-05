@@ -3,8 +3,9 @@
 {% block title %}HOME VIEW{% endblock %}
 
 {% block content %}
-
-
-<p><a href="{% url 'car_add' %}">Calculate by selecting car</a></p>
-<p><a href="{% url 'calculator' %}">Calculate basic carbon footprint</a></p>
+<h3>Click one of the following links
+    to calculate your carbon emissions:</h3>
+<h5><a href="{% url 'car_add' %}">Select your car</a></h5>
+<h4>OR</h4>
+<h5><a href="{% url 'calculator' %}">If you know your fuel efficiency</a></h5>
 {% endblock %}

@@ -2,6 +2,17 @@
 
 {% block content %}
 
-<p>Basic calc page</p>
-<a href="{% url 'home_view' %}">Return to home page</a>
+<form method="post" class="form" novalidate>
+    {% csrf_token %}
+    <h3>Enter fuel efficiency (mpg): </h3>
+    <table>
+        {{ form.as_table }}
+    </table>
+    <button type="submit" value="submission">Submit</button>
+</form>
+
+{% if emissions %}
+<h5>Your vehicle outputs {{ emissions }} pounds of CO2 per mile</h5>
+{% endif %}
+<p><a href="{% url 'home_view' %}">Return to home page</a></p>
 {% endblock %}

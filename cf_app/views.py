@@ -1,15 +1,12 @@
-from django.shortcuts import render, redirect
-from django.template import RequestContext
-from django.views.generic import ListView, CreateView, UpdateView, TemplateView
+from django.shortcuts import render
+from django.views.generic import CreateView
 from django.urls import reverse_lazy
-from django.db.models import Q
 
-from .forms import CarDetailsForm
-from .models import Car, CarMake, CarModel, CarYear
+from .forms import CarDetailsForm, BasicInputForm
+from .models import Car, CarMake, CarModel
 
 def index(request):
     context = {}
-    #context['form'] = CarDetailsForm()
     return render(request, 'cf_app/home.html', context)
 
 def search_car(request):
@@ -20,13 +17,23 @@ def search_car(request):
         queryset = Car.objects.filter(year__year__exact=form.cleaned_data['year'].year,
                                     make__name__exact=form.cleaned_data['make'].name,
                                     model__name__exact=form.cleaned_data['model'].name)
+        
+        #CO2 Emission Calculation
+        mpg = queryset[0].fuel_efficiency
+        lbs = 20 #Factor of CO2 for every gallon consumed
+        emissions = round(lbs/mpg, 2) #lbs/mile of CO2
+        if emissions > 2000:
+            emissions = round(emissions/2000) 
+
         context = {
         'year':form.cleaned_data['year'].year,
         'make':form.cleaned_data['make'].name,
         'model':form.cleaned_data['model'].name,
         'form':form,
         'queryset':queryset,
-        'fuel_efficiency': queryset[0].fuel_efficiency}
+        'fuel_efficiency': queryset[0].fuel_efficiency,
+        'emissions':emissions}
+
     else:
         context = {
         'form':form,
@@ -38,6 +45,19 @@ def search_car(request):
 #Basic calculator view
 def basic_calc(request):
     context = {}
+    form = BasicInputForm()
+    context['form'] = form
+    if request.POST:
+        mpg = int(request.POST['fuel_efficiency'])
+        lbs = 20 #Factor of CO2 for every gallon consumed
+        emissions = round(lbs/mpg, 2) #lbs/mile of CO2
+        if emissions > 2000:
+            emissions = round(emissions/2000)
+        context = {
+            'mpg':mpg,
+            'emissions':emissions,
+            'form':form
+        }
     return render(request, 'cf_app/basic_calc.html', context)
     
 class CarCreateView(CreateView):

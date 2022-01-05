@@ -2,26 +2,54 @@
 
 {% block content %}
 
-<h2>Car Form</h2>
+<div class="center" style="display:flex">
 
-<form method="post" id="carForm" data-make-url="{% url 'ajax_load_makes' %}" novalidate>
-    {% csrf_token %}
-    <table>
-        {{ form.as_table }}
-    </table>
+    <style>
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 16px 32px;
+            text-decoration: none;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
 
-    <button type="submit" value="submission">Submit</button>
+        .center {
+            margin: auto;
+            width: 50%;
 
-    <a href="{% url 'home_view' %}">Cancel</a>
-</form>
+            padding: 10px;
+        }
 
+        .form {
+            margin: auto;
+            width: 50%;
+            padding: 10px;
+        }
+    </style>
 
-{% if fuel_efficiency %}
-<p>Your {{ year }} {{ make }} {{ model }} has a fuel efficiency of {{ fuel_efficiency }} miles per gallon</p>
-<p>*Pretend there is another form here to input miles traveled*</p>
-{% endif %}
+    <form method="post" id="carForm" class="form" data-make-url="{% url 'ajax_load_makes' %}" novalidate>
+        {% csrf_token %}
+        <h3>Choose Car</h3>
+        <table>
+            {{ form.as_table }}
+        </table>
+        <button type="submit" value="submission">Submit</button>
+        <a href="{% url 'home_view' %}">Cancel</a>
+    </form>
+    {% if fuel_efficiency %}
+    <div class="w3-container">
+        <div class="w3-panel w3-light-grey w3-border w3-round">
 
-
+            <p>Your {{ year }} {{ make }} {{ model }} has a fuel efficiency of
+                {{ fuel_efficiency }} miles per gallon</p>
+            <p>It outputs {{ emissions }} pounds of CO2 per mile</p>
+            <a href="{% url 'home_view' %}">Return home</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script>
     $("#id_year").change(function () {
