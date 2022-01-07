@@ -8,4 +8,171 @@
 <h5><a href="{% url 'car_add' %}">Select your car</a></h5>
 <h4>OR</h4>
 <h5><a href="{% url 'calculator' %}">If you know your fuel efficiency</a></h5>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+       /* Set the size of the div element that contains the map */
+      #map {
+        height: 400px;
+        width: 600px;
+       }
+    </style>
+  </head>
+  <body>
+    <!--The div elements for the map and message -->
+    <div id="floating-panel">
+      <input id="delete-markers" type="button" value="Delete Markers"/>
+      <input id="refresh-page" type="button" value="Reset Map"/>
+    </div>
+
+    <div id="map"></div>
+    <div id="msg"></div>
+  </body>
+  <script>
+
+    // function initMap() {
+    //   // The map, centered on Central Park
+    //   const center = {lat: 37.3359272691065, lng: -121.88112610704574};
+    //   const options = {zoom: 13, scaleControl: true, center: center};
+    //   map = new google.maps.Map(
+    //       document.getElementById('map'), options);
+    //   // Locations of landmarks
+
+    //   //const dakota = {lat: user_input, lng: user_input};
+    //   //const frick = {lat: user_input, lng: user_input};
+
+    //   // const dakota = {lat: 40.7767644, lng: -73.9761399};
+    //   // const frick = {lat: 40.771209, lng: -73.9673991};
+
+    const sjsu = {lat: 37.3359272691065, lng: -121.88112610704574};
+    const airport = {lat: 37.36390546370641, lng: -121.9297489775414};
+
+    //   // The markers for SJSU and San Jose Airport
+    // var mk1 = new google.maps.Marker({position: sjsu, map: map});
+    // var mk2 = new google.maps.Marker({position: airport, map: map});
+    // }
+
+    // array of markers
+    var markers = [];
+    // array of marker positions
+    var markerPosition = [];
+
+    function haversine_distance(mk1, mk2) {
+      var R = 3958.8; // Radius of earth in miles
+      var rlat1 = mk1.position.lat() * (Math.PI/180); // Convert degrees to radians
+      var rlat2 = mk2.position.lat() * (Math.PI/180); // Convert degrees to radians
+      var difflat = rlat2-rlat1; // Radian difference (latitudes)
+      var difflon = (mk2.position.lng()-mk1.position.lng()) * (Math.PI/180); // Radian difference (longitudes)
+
+      var d = 2 * R * Math.asin(Math.sqrt(Math.sin(difflat/2)*Math.sin(difflat/2)+Math.cos(rlat1)*Math.cos(rlat2)*Math.sin(difflon/2)*Math.sin(difflon/2)));
+      return d;
+    }
+
+    function initMap() {
+      // map options
+      var options = {
+        zoom:8,
+        center:sjsu
+      }
+
+      // new map
+      var map = new google.maps.Map(document.getElementById('map'), options);
+
+      // listen for click on map
+      map.addListener('click', (e) => {
+        console.log(e);
+        // add marker
+        addMarkerAndPanTo(e.latLng, map);
+
+        if (markers.length == 2)
+        {
+          // draw a line showing straight distance between two markers
+          // var line = new google.maps.Polyline({path:[markerPosition[0], markerPosition[1]], map:map})
+
+          // calculate and display the distance between markers
+          // var distance = haversine_distance(markers[0], markers[1]);
+          // document.getElementById('msg').innerHTML = "Distance between markers: " + distance.toFixed(2) + " mi.";
+          let directionsService = new google.maps.DirectionsService();
+            let directionsRenderer = new google.maps.DirectionsRenderer();
+            directionsRenderer.setMap(map); // Existing map object displays directions
+            // Create route from existing points used for markers
+            const route = {
+                origin: markerPosition[0],
+                destination: markerPosition[1],
+                travelMode: 'DRIVING'
+            }
+
+            directionsService.route(route,
+              function(response, status) { // anonymous function to capture directions
+                if (status !== 'OK') {
+                  window.alert('Directions request failed due to ' + status);
+                  return;
+                } else {
+                  directionsRenderer.setDirections(response); // Add route to the map
+                  var directionsData = response.routes[0].legs[0]; // Get data about the mapped route
+                  if (!directionsData) {
+                    window.alert('Directions request failed');
+                    return;
+                  }
+                  else {
+                    document.getElementById('msg').innerHTML += " Driving distance is " + directionsData.distance.text + " (" + directionsData.duration.text + ").";
+                  }
+                }
+              });
+        }
+      });
+
+      // event listeners for buttons
+      document
+        .getElementById("delete-markers")
+        .addEventListener("click", deleteMarkers)
+
+      document
+        .getElementById("refresh-page")
+        .addEventListener("click", refreshPage);
+    }
+
+    // add marker function
+    function addMarkerAndPanTo(latLng, map){
+      if (markers.length < 2)
+      {
+        var marker = new google.maps.Marker({
+            position:{lat: latLng.lat(), lng: latLng.lng()},
+            map:map
+        })
+        map.panTo(latLng);
+        markers.push(marker);
+        markerPosition.push(marker.position);
+      }
+    }
+
+    // sets the map on all markers in the array
+    function setMapOnAll(map) {
+      for (let i = 0; i < markers.length; i++) {
+        markers[i].setMap(map);
+      }
+    }
+
+    // removes all markers from the map and deletes them from the array
+    function deleteMarkers() {
+      setMapOnAll(null);
+      markers = [];
+      console.log("Deleted Markers");
+    }
+
+    function refreshPage() {
+      window.location.reload();
+      console.log("Rereshing Page");
+    }
+
+  </script>
+
+  <!--Load the API from the specified URL -- remember to replace YOUR_API_KEY-->
+  <script async
+  src="">
+  </script>
+</html>
+
 {% endblock %}
