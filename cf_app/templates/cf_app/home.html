@@ -23,7 +23,7 @@
   <body>
     <!--The div elements for the map and message -->
     <div id="floating-panel">
-      <input id="delete-markers" type="button" value="Delete Markers"/>
+      <!-- <input id="delete-markers" type="button" value="Delete Markers"/> -->
       <input id="refresh-page" type="button" value="Reset Map"/>
     </div>
 
@@ -125,9 +125,11 @@
       });
 
       // event listeners for buttons
-      document
-        .getElementById("delete-markers")
-        .addEventListener("click", deleteMarkers)
+
+      // redundant
+      // document
+        // .getElementById("delete-markers")
+        // .addEventListener("click", deleteMarkers)
 
       document
         .getElementById("refresh-page")
@@ -164,14 +166,15 @@
 
     function refreshPage() {
       window.location.reload();
-      console.log("Rereshing Page");
+      deleteMarkers();
+      console.log("Refreshing Page");
     }
 
   </script>
 
   <!--Load the API from the specified URL -- remember to replace YOUR_API_KEY-->
   <script async
-  src="">
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRWDmf-Np5VeKSZiyU9hxQwraUfUb333I&callback=initMap">
   </script>
 </html>
 
