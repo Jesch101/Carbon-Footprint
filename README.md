@@ -9,4 +9,4 @@ A Django application developed by [Jeremy Esch](https://github.com/jesch101), [C
 
 ## Code Functions 
 - [`car_form`](cf_app/templates/cf_app/car_form.html) 
-- [`home`](cf_app/templates/cf_app/home.html) Loads the Google Map onto the home page and allows user to input two locations to determine the carbon footprint of a vehicle given a start and end point. 
+- [`home`](cf_app/templates/cf_app/home.html) Loads the Google Map onto the home page and allows user to input a start and end point to determine the carbon footprint of a vehicle.
