@@ -1,5 +1,5 @@
 # Carbon-Footprint-Calculator
-A Django application developed by [Jeremy Esch](https://github.com/jesch101), [Connor Bustos](https://github.com/connorbustos), and [Jonathan Do](https://github.com/jodey) that allows users calculate a vehicles carbon footprint from a Google Maps trip. 
+A Django application developed by [Jeremy Esch](https://github.com/jesch101), [Connor Bustos](https://github.com/connorbustos), and [Jonathan Do](https://github.com/jdoey) that allows users calculate a vehicles carbon footprint from a Google Maps trip. 
 
 ## Instructions to Run
 1. Install Django 
